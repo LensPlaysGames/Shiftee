@@ -1,14 +1,17 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_dsp/juce_dsp.h>
+
+#include "BitShifter.h"
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor
+class ShifteeProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    AudioPluginAudioProcessor();
-    ~AudioPluginAudioProcessor() override;
+    ShifteeProcessor();
+    ~ShifteeProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -42,7 +45,28 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-private:
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
+    struct ChainSettings {
+        float gain_dB { 0.0f };
+        int bitShifterOffset { 0 };
+    };
+
+    ChainSettings getChainSettings();
+
+    // ChainPositions is an enum that details the organization of processors within a mono chain.
+    enum ChainPositions { Gain, BitShifter };
+    // MonoChain is the audio processing chain that will be used to process each audio channel.
+    using MonoChain = juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::BitShifter>;
+
+    void UpdateAll();
+
+private:
+    MonoChain leftChain, rightChain;
+    void UpdateChainFromSettings(MonoChain& chain, ChainSettings& settings);
+
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShifteeProcessor)
 };

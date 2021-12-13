@@ -1,14 +1,5 @@
 # Shiftee Audio Plugin CMakeLists.txt
 
-# If you've installed JUCE somehow (via a package manager, or directly using the CMake install
-# target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
-# included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
-# include that subdirectory as part of the build.
-
-# find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
-# or
-# add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
-
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
 
@@ -25,7 +16,7 @@ juce_add_plugin(ShifteePlugin
     # VERSION ...                          		# Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME Lensor Radii                  	# Specify the name of the plugin's author
+    COMPANY_NAME LensorRadii                  	# Specify the name of the plugin's author
     IS_SYNTH FALSE                       		# Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE               		# Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE              		# Does the plugin need midi output?
@@ -35,7 +26,7 @@ juce_add_plugin(ShifteePlugin
     PLUGIN_MANUFACTURER_CODE Juce               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE B1t$                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS AU VST3               				# The formats to build. Other valid formats are: AAX Unity VST AU AUv3 Standalone
+    FORMATS AU VST3               				# The formats to build. Valid formats are: VST3 AAX Unity VST AU AUv3 Standalone
     PRODUCT_NAME "Shiftee")        				# The name of the final executable, which can differ from the target name
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
@@ -54,7 +45,7 @@ juce_add_plugin(ShifteePlugin
 target_sources(ShifteePlugin
     PRIVATE
         PluginEditor.cpp
-        PluginProcessor.cpp)
+        PluginProcessor.cpp "BitShifter.h")
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use

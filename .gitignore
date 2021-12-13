@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+
+# JUCE
+**/JuceLibraryCode
+**/Builds
+*.filtergraph
+
+# CMake
+build
+**/CMakeFiles
+
+# Visual Studio
+**/.vs
+*.vcxproj
+*.vcxproj.filters

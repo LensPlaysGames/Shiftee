@@ -37,6 +37,7 @@
 *.filtergraph
 
 # CMake
+out
 build
 **/CMakeFiles
 

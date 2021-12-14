@@ -14,10 +14,10 @@ FL Studio requires that all `.vst3` plugins be placed in a single specific folde
 `C:\Program Files\Common Files\VST3\` \
 and adding custom paths to a `.vst3` or `.vst3` directory isn't an option. 
 
-Over in Ableton, custom `.vst3` directories are specifiable, so it's easy to find the right place to put it.
+Over in Ableton, custom `.vst3` directories are specifiable, so it's easy to find or add the right place to put it.
 
 #### MacOSx, Linux
-I have not tested anything on macOSx or Linux yet so if you have any comments, concerns, or criticisms, be sure to leave an [issue](https://github.com/LensPlaysGames/Gainbit/issues) or make a [pull request](https://github.com/LensPlaysGames/Gainbit/pulls).
+I have not tested anything on macOSx or Linux yet so if you have any comments, concerns, or criticisms, be sure to leave an [issue](https://github.com/LensPlaysGames/Shiftee/issues) or make a [pull request](https://github.com/LensPlaysGames/Shiftee/pulls).
 
 ### Building the plugin
 If you: are a developer and want to edit the source code and actually build the thing, this project uses CMake.

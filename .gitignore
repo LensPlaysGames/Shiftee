@@ -45,3 +45,6 @@ build
 **/.vs
 *.vcxproj
 *.vcxproj.filters
+
+# Markdown Editor backup
+*.md.backup

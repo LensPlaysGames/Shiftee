@@ -14,8 +14,6 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     ShifteeProcessor& audioProcessor;
 
     /* Components */
@@ -26,10 +24,10 @@ private:
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, bitShifterOffsetAttachment;
 
     /* Return all components to be drawn within the editor */
-    std::vector<juce::Component*> getComponents() {
+    std::vector<juce::Component*> getComponents() { 
         return {
             &gainSlider,
-            &bitShifterOffsetSlider
+            &bitShifterOffsetSlider 
         };
     }
 

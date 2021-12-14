@@ -20,7 +20,7 @@ ShifteeProcessorEditor::ShifteeProcessorEditor (ShifteeProcessor& p)
 
     bitShifterOffsetSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     bitShifterOffsetSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxRight, false, 50, 20);
-    bitShifterOffsetSlider.setRange(2, 32, 1);
+    bitShifterOffsetSlider.setRange(0, 32, 1);
 
     /* Make all components a child to the current editor, showing them */
     for (auto& component : getComponents())

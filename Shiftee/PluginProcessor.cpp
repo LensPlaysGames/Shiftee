@@ -67,23 +67,12 @@ int ShifteeProcessor::getCurrentProgram()
     return 0;
 }
 
-void ShifteeProcessor::setCurrentProgram (int index)
-{
-    juce::ignoreUnused (index);
-}
-
-const juce::String ShifteeProcessor::getProgramName (int index)
-{
-    juce::ignoreUnused (index);
-    return {};
-}
-
-void ShifteeProcessor::changeProgramName (int index, const juce::String& newName)
-{
-    juce::ignoreUnused (index, newName);
-}
+void ShifteeProcessor::setCurrentProgram (int index) { juce::ignoreUnused (index); }
+const juce::String ShifteeProcessor::getProgramName (int index) { juce::ignoreUnused (index); return {}; }
+void ShifteeProcessor::changeProgramName (int index, const juce::String& newName) { juce::ignoreUnused (index, newName); }
 
 //==============================================================================
+/* Called when the plugin is first opened; used to initialize the plugin */
 void ShifteeProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     /* Initialize DSP Chain */
@@ -97,6 +86,7 @@ void ShifteeProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     rightChain.prepare(spec);
 }
 
+/* Called when the plugin is closing for good; used to deallocate memory where needed */
 void ShifteeProcessor::releaseResources() {}
 
 bool ShifteeProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -123,16 +113,24 @@ bool ShifteeProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
   #endif
 }
 
+/* Process a single audio block; a group of floating point audio samples */
 void ShifteeProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    // MIDI data is unused in this plugin.
     juce::ignoreUnused (midiMessages);
 
+    /* Denormals: 
+    *   More commonly referred to as subnormal numbers are 
+    *   Numbers so close to zero yet under the precision of a floating point number. 
+    *   Turning these off basically just means reducing the complexity of floats for the CPU.
+    */
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+    int totalNumInputChannels  = getTotalNumInputChannels();
+    int totalNumOutputChannels = getTotalNumOutputChannels();
 
     // This is here to avoid people getting screaming feedback when they first compile a plugin.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
 
@@ -142,8 +140,9 @@ void ShifteeProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
     /* Process Audio */
     // Convert sample buffer to dsp audio block.
     juce::dsp::AudioBlock<float> block(buffer);
-    auto leftBlock = block.getSingleChannelBlock(0);
-    auto rightBlock = block.getSingleChannelBlock(1);
+    // Separate left and right audio blocks.
+    juce::dsp::AudioBlock<float> leftBlock = block.getSingleChannelBlock(0);
+    juce::dsp::AudioBlock<float> rightBlock = block.getSingleChannelBlock(1);
     // Create contexts from block channels left and right, respectively.
     juce::dsp::ProcessContextReplacing<float> leftContext(leftBlock);
     juce::dsp::ProcessContextReplacing<float> rightContext(rightBlock);
@@ -153,23 +152,16 @@ void ShifteeProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
 }
 
 //==============================================================================
-bool ShifteeProcessor::hasEditor() const
-{
-    return true; // (change this to false if you choose to not supply an editor)
-}
-
-juce::AudioProcessorEditor* ShifteeProcessor::createEditor()
-{
-    return new ShifteeProcessorEditor (*this);
-}
+bool ShifteeProcessor::hasEditor() const{ return true; }
+juce::AudioProcessorEditor* ShifteeProcessor::createEditor() { return new ShifteeProcessorEditor (*this); }
 
 //==============================================================================
+/* Save/Load plugin parameters */
 void ShifteeProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
     juce::MemoryOutputStream mos(destData, true);
     apvts.state.writeToStream(mos);
 }
-
 void ShifteeProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
     auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
@@ -179,6 +171,8 @@ void ShifteeProcessor::setStateInformation(const void* data, int sizeInBytes)
     }
 }
 
+//==============================================================================
+/* Return a new ChainSettings created from the parameters within the APVTS */
 ShifteeProcessor::ChainSettings ShifteeProcessor::getChainSettings()
 {
     ChainSettings settings;
@@ -189,6 +183,7 @@ ShifteeProcessor::ChainSettings ShifteeProcessor::getChainSettings()
     return settings;
 }
 
+/* Update all chains within processor from a new settings */
 void ShifteeProcessor::UpdateAll()
 {
     ChainSettings settings = getChainSettings();
@@ -196,12 +191,14 @@ void ShifteeProcessor::UpdateAll()
     UpdateChainFromSettings(rightChain, settings);
 }
 
+/* Update a single processor chain from a struct of settings */
 void ShifteeProcessor::UpdateChainFromSettings(MonoChain& chain, ChainSettings& settings)
 {
     chain.get<ChainPositions::Gain>().setGainDecibels(settings.gain_dB);
     chain.get<ChainPositions::BitShifter>().setBitOffset(settings.bitShifterOffset);
 }
 
+/* Create parameter layout within APVTS */
 juce::AudioProcessorValueTreeState::ParameterLayout ShifteeProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
@@ -214,7 +211,4 @@ juce::AudioProcessorValueTreeState::ParameterLayout ShifteeProcessor::createPara
 
 //==============================================================================
 // This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new ShifteeProcessor();
-}
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new ShifteeProcessor(); }

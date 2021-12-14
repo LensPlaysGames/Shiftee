@@ -17,7 +17,7 @@ ShifteeProcessorEditor::ShifteeProcessorEditor (ShifteeProcessor& p)
     gainSlider.setRange(-48.0, 48.0, 0.1);
 
     bitShifterOffsetSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    gainSlider.setRange(2, 32, 1);
+    bitShifterOffsetSlider.setRange(2, 32, 1);
 
     /* Make all components a child to the current editor (effectively showing them) */
     for (auto& component : getComponents())
@@ -35,6 +35,17 @@ ShifteeProcessorEditor::~ShifteeProcessorEditor()
 void ShifteeProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+
+    auto bounds = getLocalBounds();
+    /* Save space on the top of the plugin for a title (test) */
+    auto contentBounds = bounds.removeFromBottom(bounds.getHeight() * 0.9);
+    /* Save space on the right side to draw the labels in the paint function */
+    auto labelBounds = contentBounds.removeFromRight(contentBounds.getWidth() * 0.18);
+
+    /* Put gain label centred in top half of label bounds */
+    g.drawFittedText("Gain", labelBounds.removeFromTop(labelBounds.getHeight() * 0.5), juce::Justification::centred, 1);
+    /* Put bit offset label centred in bottom half of label bounds */
+    g.drawFittedText("Bit Offset", labelBounds, juce::Justification::centred, 1);
 }
 
 void ShifteeProcessorEditor::resized()
@@ -47,5 +58,6 @@ void ShifteeProcessorEditor::resized()
 
     /* Place gain slider in top half of content bounds */
     gainSlider.setBounds(contentBounds.removeFromTop(contentBounds.getHeight() * 0.5));
+    /* Put bit offset slider in bottom half of content bounds */
     bitShifterOffsetSlider.setBounds(contentBounds);
 }

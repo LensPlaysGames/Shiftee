@@ -1,5 +1,7 @@
 # JUCE_Shiftee
  If it bits, it shifts, for a low, flat rate.
+ 
+ ![A screenshot of the plugin; two horizontal sliders labeled "Gain" and "Bit Offset" respectively.](https://i.imgur.com/o7asDHI.png)
 
 This plugin uses the [JUCE](https://github.com/juce-framework/JUCE) library.
 

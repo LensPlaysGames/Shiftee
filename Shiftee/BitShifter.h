@@ -4,19 +4,10 @@ namespace juce {
         public:
             BitShifter() noexcept = default;
 
-            enum ShiftType {
-                LeftShift,
-                RightShift
-            };
-
             //==============================================================================
-            void setBitOffset(int newOffset) { 
-                if (newOffset <= sampleSizeInBits) { bitOffset = newOffset; }
-            }
-            void setShiftType(juce::dsp::BitShifter::ShiftType newType) { shiftType = newType; }
+            void setBitOffset(int newOffset) { if (newOffset <= sampleSizeInBits) { bitOffset = newOffset; } }
 
             int getBitOffset() { return bitOffset; }
-            juce::dsp::BitShifter::ShiftType setShiftType() { return shiftType; }
 
             //==============================================================================
             /** Called before processing starts. */
@@ -44,8 +35,7 @@ namespace juce {
             {
                 uint32_t bits;
                 std::memcpy(&bits, &s, sampleSizeInBytes);
-                if (shiftType == ShiftType::LeftShift) bits &= bits << bitOffset;
-                else bits &= bits >> bitOffset;
+                bits &= (bits << bitOffset);
                 std::memcpy(&s, &bits, sampleSizeInBytes);
                 return s;
             }
@@ -63,8 +53,6 @@ namespace juce {
                 auto len = inBlock.getNumSamples();
                 auto numChannels = inBlock.getNumChannels();
 
-                UpdateSampleSize(inBlock.getSample(0, 0));
-
                 // Simply copy input to output if plugin is bypassed.
                 if (context.isBypassed)
                 {
@@ -79,6 +67,8 @@ namespace juce {
                     auto* src = inBlock.getChannelPointer(chan);
                     auto* dst = outBlock.getChannelPointer(chan);
 
+                    UpdateSampleSize(src[0]);
+
                     // Apply to every sample
                     for (int i = 0; i < len; i++)
                         dst[i] = processSample(src[i]);
@@ -88,7 +78,6 @@ namespace juce {
         private:
             int sampleSizeInBytes = sizeof(float);
             int sampleSizeInBits = sizeof(float) * 8;
-            ShiftType shiftType = ShiftType::LeftShift;
             int bitOffset;
         };
     }

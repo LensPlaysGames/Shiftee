@@ -88,7 +88,7 @@ void ShifteeProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     /* Initialize DSP Chain */
     // Make and initialize processor specifications.
-    juce::dsp::ProcessSpec spec;
+    juce::dsp::ProcessSpec spec {};
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = 1;
@@ -123,8 +123,7 @@ bool ShifteeProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
   #endif
 }
 
-void ShifteeProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                              juce::MidiBuffer& midiMessages)
+void ShifteeProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ignoreUnused (midiMessages);
 
@@ -132,16 +131,12 @@ void ShifteeProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
+    // This is here to avoid people getting screaming feedback when they first compile a plugin.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
 
+    /* Update all processor chains from value tree. */
     UpdateAll();
 
     /* Process Audio */
@@ -165,7 +160,7 @@ bool ShifteeProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ShifteeProcessor::createEditor()
 {
-    return new juce::GenericAudioProcessorEditor (*this);
+    return new ShifteeProcessorEditor (*this);
 }
 
 //==============================================================================

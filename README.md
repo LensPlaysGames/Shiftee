@@ -44,3 +44,7 @@ On Linux, this is Makefile.
 Once the project is built using CMake, simply open it up and build the VST3 project (or whatever project you are targeting at the moment).
 
 This will create the `.vst3` that can be loaded by any modern audio plugin host.
+
+If you are having trouble finding the plugin once built, you are not alone. For some reason JUCE defaults it to kind of a crazy path. \
+For me, on Windows 10 using Visual Studio 2022, that path is `Path/To/PluginRepository/build/Shiftee/ShifteePlugin_artefacts/DebugOrRelease/VST3/Shiftee.vst3/Contents/x86_64-win/` \
+Your mileage may vary.

@@ -1,7 +1,7 @@
 # JUCE_Shiftee
  If it bits, it shifts, for a low, flat rate.
  
- ![A screenshot of the plugin; two horizontal sliders labeled "Gain" and "Bit Offset" respectively.](https://i.imgur.com/o7asDHI.png)
+ ![A screenshot of the plugin; two horizontal sliders labeled "Gain" and "Bit Offset" respectively.](https://i.imgur.com/zHtT0Nh.png)
  
 This plugin is something I thought of that I haven't seen anywhere before. Yes, everyone and their mother has bit crushers, with adjustable bit rate and bit depth, but don't you want to be able to play with those bits a little more? Move them around a little? \
 That's where this plugin comes into play.

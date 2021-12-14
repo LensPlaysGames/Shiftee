@@ -15,9 +15,11 @@ ShifteeProcessorEditor::ShifteeProcessorEditor (ShifteeProcessor& p)
 
     /* Setup Components */
     gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+    gainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxRight, false, 50, 20);
     gainSlider.setRange(-48.0, 48.0, 0.1);
 
     bitShifterOffsetSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+    bitShifterOffsetSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxRight, false, 50, 20);
     bitShifterOffsetSlider.setRange(2, 32, 1);
 
     /* Make all components a child to the current editor, showing them */
@@ -42,10 +44,12 @@ void ShifteeProcessorEditor::paint (juce::Graphics& g)
     /* Save space on the right side of the content bounds to draw labels in the paint function */
     auto labelBounds = contentBounds.removeFromRight(contentBounds.getWidth() * 0.18);
 
+    g.setColour(juce::Colours::white);
+    g.setFont(18);
     /* Put gain label centred in top half of label bounds */
     g.drawFittedText("Gain", labelBounds.removeFromTop(labelBounds.getHeight() * 0.5), juce::Justification::centred, 1);
     /* Put bit offset label centred in bottom half of label bounds */
-    g.drawFittedText("Bit Offset", labelBounds, juce::Justification::centred, 1);
+    g.drawFittedText("Bit Offset", labelBounds, juce::Justification::centred, 2);
 }
 
 /* Place components within content bounds */

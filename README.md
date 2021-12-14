@@ -10,7 +10,7 @@ Digital Audio is made up of samples; 32-bit (4-byte) floating point numbers (mea
 
 To manipulate a digital sound, it is as simple as changing these numbers.
 
-This plugin works by copying the float bits from each sample into an unsigned integer with a fixed width of 32 bits, or 4 bytes (a `uint32_t`). This means that no errors occur, as the data is all the correct size, yet now the bits can be played with using bitwise operators, as it is considered an integer. This plugin shifts the bits to the left, as that had the most versatility musically (shifting right required a lot of doing just to get something usable). The integer bits are then copied back into the float bits of the sample, causing the sound to change.
+This plugin works by copying the float bits (1s and 0s) from each sample into an unsigned integer with a fixed width of 32 bits, or 4 bytes (a `uint32_t`). This means that no errors occur, as the data is all the correct size, yet now the bits can be played with using bitwise operators, as it is considered an integer. This plugin shifts the bits to the left and then ands that with the original bits, as that had the most versatility musically (shifting right required a lot of doing just to get something usable). The integer bits are then copied back into the float bits of the sample, causing the sound to change.
 
 This plugin uses the [JUCE](https://github.com/juce-framework/JUCE) library.
 

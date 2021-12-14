@@ -2,6 +2,15 @@
  If it bits, it shifts, for a low, flat rate.
  
  ![A screenshot of the plugin; two horizontal sliders labeled "Gain" and "Bit Offset" respectively.](https://i.imgur.com/o7asDHI.png)
+ 
+This plugin is something I thought of that I haven't seen anywhere before. Yes, everyone and their mother has bit crushers, with adjustable bit rate and bit depth, but don't you want to be able to play with those bits a little more? Move them around a little? \
+That's where this plugin comes into play.
+
+Digital Audio is made up of samples; 32-bit (4-byte) floating point numbers (meaning the decimal point can move based on the precision needed) ranging from -1 to +1 .
+
+To manipulate a digital sound, it is as simple as changing these numbers.
+
+This plugin works by copying the float bits from each sample into an unsigned integer with a fixed width of 32 bits, or 4 bytes (a `uint32_t`). This means that no errors occur, as the data is all the correct size, yet now the bits can be played with using bitwise operators, as it is considered an integer. This plugin shifts the bits to the left, as that had the most versatility musically (shifting right required a lot of doing just to get something usable). The integer bits are then copied back into the float bits of the sample, causing the sound to change.
 
 This plugin uses the [JUCE](https://github.com/juce-framework/JUCE) library.
 
